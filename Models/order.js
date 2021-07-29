@@ -1,12 +1,18 @@
 const Sequelize = require("sequelize");
 const db = require("../config/db");
 
-const orderdetail = db.define("orderdetail", {
+const order = db.define("order", {
     orderid:{
         type:Sequelize.INTEGER,
         primaryKey:true,
         allowNull:false,
         autoIncrement:true
      },
-})
-module.exports=orderdetail;
+     customerID:{
+         type:Sequelize.INTEGER,
+     },
+     order_date:{
+         type:Sequelize.DATE
+     }
+    })
+    module.exports=order;

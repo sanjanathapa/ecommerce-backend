@@ -4,7 +4,6 @@ const db = require("../config/db");
 const customerdata = db.define("customerdata", {
     customerID:{
         type:Sequelize.INTEGER,
-        primaryKey:true,
         allowNull:false
     },
     firstname:{
@@ -16,7 +15,7 @@ const customerdata = db.define("customerdata", {
     
     },
     address:{
-        type:Sequelize.INTEGER,
+        type:Sequelize.STRING,
         allowNull:false
     },
     city:{

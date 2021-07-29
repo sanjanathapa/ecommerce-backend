@@ -1,8 +1,8 @@
-const Sequelize = require("sequilize");
+const Sequelize = require("sequelize");
 const sequelize = require("../config/db");
 
 const customerlogin = sequelize.define("customerlogin", {
-    customerID:{
+    customerid:{
         type:Sequelize.INTEGER,
         primaryKey:true,
         allowNull:false,
@@ -13,12 +13,15 @@ const customerlogin = sequelize.define("customerlogin", {
         allowNull:false
     },
     password:{
-        type:Sequelize.INTEGER,
+        type:Sequelize.STRING,
         allowNull:false
     },
     email:{
         type:Sequelize.STRING,
         unique:true
+    },
+    gender:{
+        type:Sequelize.STRING
     },
 })
 module.exports=customerlogin;

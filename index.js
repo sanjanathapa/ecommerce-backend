@@ -2,14 +2,15 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const db = require("./config/db");
-const adminlogin=require('./Models/admin.model')
+const model = require("./Models");
+const approute = require("./routes/adminroutes");
 
 
 const app =express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
-//app.use('/', approute);
- require("./routes/adminroutes")(app);
+app.use('/', approute);
+ //require("./routes/adminroutes")(app);
 
 
 
@@ -21,8 +22,7 @@ app.get('/', (req, res) => {
     res.send('Hello World!')
   })
 
-  db.sync();
-  adminlogin.sync();
+  model.db.sync();
 
   //test DB
 db.authenticate().then(() => {
@@ -33,8 +33,8 @@ db.authenticate().then(() => {
 });
 
 
-app.listen(4800,()=>{
-    console.log('app listening at http://localhost:4800')
-} )
+app.listen(9000,()=>{
+    console.log('app listening at http://localhost:9000')
+}) 
 
 

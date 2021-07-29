@@ -1,29 +1,172 @@
+ const model = require("../Models");
+ const Sequelize = require("sequelize");
+ const bcrypt= require("bcrypt");
+ const db = require("../config/db");
+ const passport= require("passport");
+ require("../config/passport");
+ const jwt = require("jsonwebtoken");
+const customerlogin = require("../Models/customerslogin.model");
+ //const adminlogin = model.adminlogin;
+ const customerslogin = model.customerslogin;
+ const customersdata = model.customersdata;
+ const productdetail = model.productdetail;
+// const orderdetail = model.orderdetail;
 
-const db = require("../config/db");
-const Admin=require("../Models/admin.model");
 
-exports.adminlog=((req,res)=>{
-    console.log("hello")
-    var  adminname=req.body.adminname;
-    var  password=req.body.password
-Admin.find({adminname:adminname,  password:password})
-    .then((result)=>{
-        console.log("auth failed")
-        if(result.length<1){
-            res.status(404).json({
-                message:"Auth Failed",
-                result:result
-            })
-        }
-        else{
-            res.status(400).json({
-                message: "Invalid Credentials"
-            });
-        }
-    }).catch(err=>{
-        res.json({
-            error:err
+ 
+//registering Customers
+exports.customerreg= async (req,res)=>{
+    const password= req.body.password;
+    const epassword = await bcrypt.hash(password,10)
+    const userdata={
+        customerID:req.body.customerID,
+        customername:req.body.customername,
+        password:epassword,
+        email:req.body.email,
+        gender:req.body.gender
+    }
+    customerslogin.create(userdata)
+    .then((data)=>{
+        return res.status(200).send({
+            status:200,
+            data:data,
+            message:"Registered Successfully"
+        })
+    }).catch((error)=>{
+        return res.status(401).json({
+            message:"Error in Registering",
+            success:false,
+            error:error.message
         })
     })
-})
 
+}
+//customer login
+module.exports.login=(req,res,next)=>{
+    passport.authenticate('local',(err,user,info)=>{
+        if(err) res.status(404).json(err);
+        if(user) return res.status(200).json({
+            
+            "token":jwt.sign({id:user.customerid},
+                "SECRETKEY007",
+                {
+                    expiresIn:"20m"
+                }),
+                data:user.customerid,
+        })
+
+        if(info) return res.status(401).json(info) 
+    })(req,res,next);
+}
+
+//Enter details of the registered customers  
+module.exports.userdata=(req,res)=>{
+    console.log(id.id)
+    const details = {
+       customerID : id.id, 
+       firstname: req.body.firstname,
+       lastname: req.body.lastname,
+       address: req.body.address,
+       city: req.body.city,
+       state:req.body.state,
+       zipcode:req.body.zipcode,
+       phone_number: req.body.phone_number
+    }
+    customersdata.create(details).then((data)=>{
+        return res.status(200).send({
+            status:200,
+            data:data,
+            message: "user data details"
+        }).catch((err)=>{
+            return res.status(401).send({
+                status:400,
+                success:false,
+                err:err.message
+            })
+        })
+
+    })
+}
+
+//to fetch all the users userdata or to fetch details by a particular user or customer
+module.exports.getuserdetail = (req,res)=>{
+    return customersdata.findOne({where:{customerID:id.id}}).then((data)=>{
+        res.status(200).send({
+            success:true,
+            message:"list of users and userdetail",
+            data:data
+        })
+    }).catch((err)=>{
+        res.status(401).send({
+            success:"error in finding records of users",
+            error:err.message
+        })
+    })
+}
+
+//edit or update the registered userdetail
+module.exports.edituserdata = async (req,res)=>{
+    try{
+        const edit_userdata = await customersdata.update({
+            customerID:req.body.customerID,
+            firstname:req.body.firstname,
+            lastname:req.body.lastname,
+            address:req.body.address,
+            city:req.body.city,
+            state:req.body.state,
+            zipcode:req.body.zipcode,
+            phone_number:req.body.phone_number
+        }, {where:{customerID:req.params.customerid}});
+        return res.status(200).send({
+            user:edit_userdata,
+            message:"userdetail is updated"
+        })
+    }catch(error){
+        return res.status(400).send({
+            message:"error while updating",
+            status:400,
+            error:error.message
+        })
+    }
+
+}
+
+//delete the customer (customer or admin?)
+module.exports.delete_customer= async (req,res)=>{
+    const delete_customer=await 
+    customerlogin.destroy({where:{customerid:req.params.customerid}})
+    res.send({
+        message:"customer deleted",
+        data:delete_customer
+    })
+    .catch(err=>{
+        res.send(err)
+    })
+}
+
+//productdetail
+module.exports.prodetail=(req,res)=>{
+    const pro_detail = {
+        productid : id.id, 
+        productname: req.body.productname,
+        product_description: req.body.product_description,
+        productprice: req.body.productprice,
+        product_image: req.body.product_image,
+        productstatus:req.body.productstatus,
+        product_category:req.body.product_category
+     }
+     productdetail.create(pro_detail).then((data)=>{
+         return res.status(200).send({
+             status:200,
+             data:data,
+             message: "product details"
+         }).catch((err)=>{
+             return res.status(401).send({
+                 status:400,
+                 success:false,
+                 err:err.message
+             })
+         })
+     })
+    
+}
