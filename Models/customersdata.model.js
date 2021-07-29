@@ -2,11 +2,8 @@ const Sequelize = require("sequelize");
 const db = require("../config/db");
 
 const customerdata = db.define("customerdata", {
-    customerID:{
-        type:Sequelize.INTEGER,
-        allowNull:false
-    },
-    firstname:{
+
+        firstname:{
         type:Sequelize.STRING,
         allowNull:false
     },

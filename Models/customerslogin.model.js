@@ -2,7 +2,7 @@ const Sequelize = require("sequelize");
 const sequelize = require("../config/db");
 
 const customerlogin = sequelize.define("customerlogin", {
-    customerid:{
+    customerID:{
         type:Sequelize.INTEGER,
         primaryKey:true,
         allowNull:false,

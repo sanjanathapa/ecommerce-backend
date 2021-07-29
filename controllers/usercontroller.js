@@ -9,7 +9,7 @@ const customerlogin = require("../Models/customerslogin.model");
  //const adminlogin = model.adminlogin;
  const customerslogin = model.customerslogin;
  const customersdata = model.customersdata;
- const productdetail = model.productdetail;
+ //const productdetail = model.productdetail;
 // const orderdetail = model.orderdetail;
 
 
@@ -18,6 +18,7 @@ const customerlogin = require("../Models/customerslogin.model");
 exports.customerreg= async (req,res)=>{
     const password= req.body.password;
     const epassword = await bcrypt.hash(password,10)
+    console.log(epassword)
     const userdata={
         customerID:req.body.customerID,
         customername:req.body.customername,
@@ -47,12 +48,12 @@ module.exports.login=(req,res,next)=>{
         if(err) res.status(404).json(err);
         if(user) return res.status(200).json({
             
-            "token":jwt.sign({id:user.customerid},
+            "token":jwt.sign({id:user.customerID},
                 "SECRETKEY007",
                 {
                     expiresIn:"20m"
                 }),
-                data:user.customerid,
+                data:user.customerID,
         })
 
         if(info) return res.status(401).json(info) 
@@ -76,7 +77,7 @@ module.exports.userdata=(req,res)=>{
         return res.status(200).send({
             status:200,
             data:data,
-            message: "user data details"
+            message: "user details has been filled"
         }).catch((err)=>{
             return res.status(401).send({
                 status:400,
@@ -93,12 +94,12 @@ module.exports.getuserdetail = (req,res)=>{
     return customersdata.findOne({where:{customerID:id.id}}).then((data)=>{
         res.status(200).send({
             success:true,
-            message:"list of users and userdetail",
+            message:"Your Record Found",
             data:data
         })
     }).catch((err)=>{
         res.status(401).send({
-            success:"error in finding records of users",
+            success:"error in finding records of user",
             error:err.message
         })
     })
@@ -116,7 +117,7 @@ module.exports.edituserdata = async (req,res)=>{
             state:req.body.state,
             zipcode:req.body.zipcode,
             phone_number:req.body.phone_number
-        }, {where:{customerID:req.params.customerid}});
+        }, {where:{customerID:id.id}});
         return res.status(200).send({
             user:edit_userdata,
             message:"userdetail is updated"
@@ -134,7 +135,7 @@ module.exports.edituserdata = async (req,res)=>{
 //delete the customer (customer or admin?)
 module.exports.delete_customer= async (req,res)=>{
     const delete_customer=await 
-    customerlogin.destroy({where:{customerid:req.params.customerid}})
+    customerlogin.destroy({where:{customerID:req.params.customerid}})
     res.send({
         message:"customer deleted",
         data:delete_customer
@@ -144,29 +145,3 @@ module.exports.delete_customer= async (req,res)=>{
     })
 }
 
-//productdetail
-module.exports.prodetail=(req,res)=>{
-    const pro_detail = {
-        productid : id.id, 
-        productname: req.body.productname,
-        product_description: req.body.product_description,
-        productprice: req.body.productprice,
-        product_image: req.body.product_image,
-        productstatus:req.body.productstatus,
-        product_category:req.body.product_category
-     }
-     productdetail.create(pro_detail).then((data)=>{
-         return res.status(200).send({
-             status:200,
-             data:data,
-             message: "product details"
-         }).catch((err)=>{
-             return res.status(401).send({
-                 status:400,
-                 success:false,
-                 err:err.message
-             })
-         })
-     })
-    
-}

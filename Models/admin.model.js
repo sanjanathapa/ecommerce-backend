@@ -13,7 +13,7 @@ const adminlogin = db.define("adminlogin", {
         allowNull:false
     },
     password:{
-        type:Sequelize.INTEGER,
+        type:Sequelize.STRING,
         allowNull:false
     },
     email:{

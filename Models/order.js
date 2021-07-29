@@ -8,9 +8,6 @@ const order = db.define("order", {
         allowNull:false,
         autoIncrement:true
      },
-     customerID:{
-         type:Sequelize.INTEGER,
-     },
      order_date:{
          type:Sequelize.DATE
      }

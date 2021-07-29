@@ -1,7 +1,7 @@
 const passport = require('passport');
 const localpassport = require('passport-local').Strategy;
 const model = require("../Models/index");
-const customerlogin = model.customerslogin;
+const adminlogin = model.adminlogin;
 const bcrypt  = require('bcrypt');
 
 
@@ -9,24 +9,26 @@ passport.use(
    new localpassport({ usernameField: "email"},
    async (email,password,done)=>{
        try{
-        const user = await customerlogin.findOne({where:{email:email}},
+        const admin = await adminlogin.findOne({where:{email:email}},
             function(err){
                     console.log(err)
                 return done(err);})
-                if(!user){
+                if(!admin){
                     return done(null,false,{message:"Incorrect email"})
                  }
-                 const result = user;
+                 const result = admin;
 
-                 console.log(user)
+                 console.log(admin)
                const value =  bcrypt.compareSync(password,result.password);
                 if(value===true){
-                    return done(null,user);
+                    return done(null,admin);
                 }
                 else{
                     return done(null,false,{message:"password is wrong"})
                 }
     
+                
+
             }
         
             
