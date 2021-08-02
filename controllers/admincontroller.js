@@ -3,12 +3,14 @@ const bcrypt= require("bcrypt");
 const passport= require("passport");
 require("../config/adminpassport");
 const jwt = require("jsonwebtoken");
+const customerlogin = require("../Models/customerslogin.model");
+//const  customerslogin  = require("../Models");
 
 
 const adminlogin = model.adminlogin;
- //const customerslogin = model.customerslogin;
- //const customersdata = model.customersdata;
- //const productdetail = model.productdetail;
+//const customerslogin = model.customerslogin;
+const customersdata = model.customersdata;
+const productdetail = model.productdetail;
 // const orderdetail = model.orderdetail;
 
 module.exports.adminreg= async (req,res)=>{
@@ -39,7 +41,7 @@ module.exports.adminreg= async (req,res)=>{
 
 //admin login
 module.exports.Adminlogin=(req,res,next)=>{
-    passport.authenticate('local',(err,user,info)=>{
+    passport.authenticate('admin',(err,user,info)=>{
         if(err) res.status(404).json(err);
         if(user) return res.status(200).json({
             
@@ -59,7 +61,7 @@ module.exports.Adminlogin=(req,res,next)=>{
 //productdetail
 module.exports.prodetail=(req,res)=>{
     const pro_detail = {
-        productid : id.id, 
+        productid : req.body.productid, 
         productname: req.body.productname,
         product_description: req.body.product_description,
         productprice: req.body.productprice,
@@ -81,4 +83,22 @@ module.exports.prodetail=(req,res)=>{
          })
      })
     
+}
+//customers detail fetching
+module.exports.getcustomerdetail= (req,res)=>{
+    return customerlogin.findAll({include:customersdata}).then((result)=>{
+     res.status(200).json({
+        success:true,
+        message:"list of the all customers",
+        data:result
+    })
+})
+
+.catch((error)=>{
+    return res.status(404).send({
+        status:400,
+        message:"there is some error",
+        error:error
+    })
+})
 }

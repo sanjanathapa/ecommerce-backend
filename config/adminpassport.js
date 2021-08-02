@@ -5,7 +5,7 @@ const adminlogin = model.adminlogin;
 const bcrypt  = require('bcrypt');
 
 
-passport.use(
+passport.use("admin",
    new localpassport({ usernameField: "email"},
    async (email,password,done)=>{
        try{

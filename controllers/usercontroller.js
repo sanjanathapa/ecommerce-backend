@@ -9,7 +9,7 @@ const customerlogin = require("../Models/customerslogin.model");
  //const adminlogin = model.adminlogin;
  const customerslogin = model.customerslogin;
  const customersdata = model.customersdata;
- //const productdetail = model.productdetail;
+ const productdetail = model.productdetail;
 // const orderdetail = model.orderdetail;
 
 
@@ -109,7 +109,6 @@ module.exports.getuserdetail = (req,res)=>{
 module.exports.edituserdata = async (req,res)=>{
     try{
         const edit_userdata = await customersdata.update({
-            customerID:req.body.customerID,
             firstname:req.body.firstname,
             lastname:req.body.lastname,
             address:req.body.address,
@@ -132,16 +131,30 @@ module.exports.edituserdata = async (req,res)=>{
 
 }
 
-//delete the customer (customer or admin?)
-module.exports.delete_customer= async (req,res)=>{
-    const delete_customer=await 
-    customerlogin.destroy({where:{customerID:req.params.customerid}})
+//delete the customer (customer)
+module.exports.deletecustomer= async (req,res)=>{
+    const delete_customer=await customerlogin.destroy({where:{customerID:id.id}})
     res.send({
         message:"customer deleted",
         data:delete_customer
     })
     .catch(err=>{
         res.send(err)
+    })
+}
+//customer viewing the product detail
+module.exports.getprodetail = (req,res)=>{
+    return productdetail.findAll().then((data)=>{
+        res.status(200).send({
+            success:true,
+            message:"list of products",
+            data:data
+        })
+    }).catch((err)=>{
+        res.status(401).send({
+            success:"something an error",
+            error:err.message
+        })
     })
 }
 
