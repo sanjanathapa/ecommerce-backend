@@ -6,6 +6,7 @@
  require("../config/passport");
  const jwt = require("jsonwebtoken");
 const customerlogin = require("../Models/customerslogin.model");
+const { update } = require("../Models/customerslogin.model");
  //const adminlogin = model.adminlogin;
  const customerslogin = model.customerslogin;
  const customersdata = model.customersdata;
@@ -51,7 +52,7 @@ module.exports.login=(req,res,next)=>{
             "token":jwt.sign({id:user.customerID},
                 "SECRETKEY007",
                 {
-                    expiresIn:"20m"
+                    expiresIn:"30m"
                 }),
                 data:user.customerID,
         })
@@ -106,9 +107,10 @@ module.exports.getuserdetail = (req,res)=>{
 }
 
 //edit or update the registered userdetail
-module.exports.edituserdata = async (req,res)=>{
+module.exports.edituserdata = (req,res)=>{
+    console.log(req.body)
     try{
-        const edit_userdata = await customersdata.update({
+        const edit_userdata = {
             firstname:req.body.firstname,
             lastname:req.body.lastname,
             address:req.body.address,
@@ -116,7 +118,7 @@ module.exports.edituserdata = async (req,res)=>{
             state:req.body.state,
             zipcode:req.body.zipcode,
             phone_number:req.body.phone_number
-        }, {where:{customerID:id.id}});
+        };customersdata.update(edit_userdata,{where:{customerID:id.id}})
         return res.status(200).send({
             user:edit_userdata,
             message:"userdetail is updated"

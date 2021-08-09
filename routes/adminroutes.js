@@ -11,6 +11,8 @@ approute.post('/adminreg', myctrll.adminreg);
 approute.post('/Adminlogin', myctrll.Adminlogin);
 approute.get('/getcustomerdetail', verifyy.verfiyadmintoken, myctrll.getcustomerdetail)
 approute.post('/prodetail', verifyy.verfiyadmintoken, myctrll.prodetail);
+approute.get('/getprodetail', myctrll.getprodetail);
+
 
 approute.post('/customerreg',myctrl.customerreg);
 approute.post('/login', myctrl.login);

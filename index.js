@@ -22,7 +22,7 @@ app.get('/', (req, res) => {
     res.send('Hello World!')
   })
 
-  model.db.sync();
+  model.db.sync({alter:true});
 
   //test DB
 db.authenticate().then(() => {

@@ -20,7 +20,7 @@ model.adminlogin.hasMany(model.productdetail,{
     foreignKey:'adminID'
 })
 model.customerslogin.hasMany(model.order, {
-    foreignKey:'customerid'
+    foreignKey:'customerID'
 })
 model.order.hasMany(model.orderitem, {
     foreignKey:'orderid'

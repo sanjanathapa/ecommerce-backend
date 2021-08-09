@@ -61,6 +61,7 @@ module.exports.Adminlogin=(req,res,next)=>{
 //productdetail
 module.exports.prodetail=(req,res)=>{
     const pro_detail = {
+        adminID:id.id,
         productid : req.body.productid, 
         productname: req.body.productname,
         product_description: req.body.product_description,
@@ -101,4 +102,20 @@ module.exports.getcustomerdetail= (req,res)=>{
         error:error
     })
 })
+}
+
+//admin viewing the product details
+module.exports.getprodetail = (req,res)=>{
+    return productdetail.findAll().then((data)=>{
+        res.status(200).send({
+            success:true,
+            message:"list of products",
+            data:data
+        })
+    }).catch((err)=>{
+        res.status(401).send({
+            success:"something an error",
+            error:err.message
+        })
+    })
 }
